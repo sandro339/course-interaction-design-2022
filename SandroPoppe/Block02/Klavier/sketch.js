@@ -33,12 +33,29 @@ let FingerC = null;
 let FingerD = null;
 let FingerE = null;
 let FingerG = null;
-
+let blobs = [];
 
 let HighF,LowF,G,A,B,C,D,E;
 
 
 let sketch = function(p){
+  class Blob {
+    constructor(speed,pos) {
+    this.pos = pos;
+    this.speed = speed;
+    this.diameter = 5*scaler2;
+    }
+    display() {
+      p.stroke(0);
+      p.strokeWeight(20);
+      p.fill(0);
+      p.rectMode(p.CENTER);
+      p.rect(this.pos.x,this.pos.y, this.diameter,this.diameter);
+    }
+    move() {
+      this.pos.y -=this.speed;
+    }
+  }
   p.preload = function(){
     HighF = p.loadSound('data/key13.mp3');
     LowF = p.loadSound('data/key01.mp3');
@@ -52,8 +69,8 @@ let sketch = function(p){
   p.setup = function(){
     w = 1000;
     h = 800;
-  
-
+    
+    
     canvas = p.createCanvas(w, h, p.WEBGL);
     canvas.id('canvas');
   
@@ -67,7 +84,7 @@ let sketch = function(p){
     p.scale(-1,1);
     p.translate(-p.width/2,-p.height/2);
     p.stroke(0);
-    p.strokeWeight(4);
+    p.strokeWeight(4*scaler2);
     p.stroke(255,200,2);
     p.fill(0)
     p.rectMode(p.CORNERS);
@@ -86,11 +103,12 @@ let sketch = function(p){
       {
         if(detections.multiHandLandmarks[0] != undefined){
           for(let i=0; i<detections.multiHandLandmarks.length; i++){
-            for(let j=8; j<21; j++){
+            for(let j=4; j<21; j++){
               if(j%4== 0){
                 if(playedHighF == false && detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingHighF = true;
                   FingerHighF = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(62.5*scaler2,500*scaler2)));
                 }
                 if(FingerHighF == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedHighF = false;
@@ -99,6 +117,7 @@ let sketch = function(p){
                 if(playedE == false &&detections.multiHandLandmarks[i][j].x*p.width < 250 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 125*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingE = true;
                   FingerE = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(187.5*scaler2,500*scaler2)));
                 }
                 if(FingerE == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 250 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 125*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedE = false;
@@ -107,48 +126,54 @@ let sketch = function(p){
                 if(playedD == false &&detections.multiHandLandmarks[i][j].x*p.width < 375 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 250*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingD = true;
                   FingerD = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(312.5*scaler2,500*scaler2)));
                 }
-                if(FingerD == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
+                if(FingerD == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 375 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 250*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedD = false;
                   console.log("played");
                 }
                 if(playedC == false &&detections.multiHandLandmarks[i][j].x*p.width < 500 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 375*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingC = true;
                   FingerC = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(437.5*scaler2,500*scaler2)));
                 }
-                if(FingerC == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
+                if(FingerC == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 500 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 375*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedC = false;
                   console.log("played");
                 }
                 if(playedB == false &&detections.multiHandLandmarks[i][j].x*p.width < 625 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 500*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingB = true;
                   FingerB = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(562.5*scaler2,500*scaler2)));
                 }
-                if(FingerB == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
+                if(FingerB == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 625 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 500*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedB = false;
                   console.log("played");
                 }
                 if(playedA == false &&detections.multiHandLandmarks[i][j].x*p.width < 750 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 625*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingA = true;
                   FingerA = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(687.5*scaler2,500*scaler2)));
                 }
-                if(FingerA == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
+                if(FingerA == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 750 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 625*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedA = false;
                   console.log("played");
                 }
                 if(playedG == false &&detections.multiHandLandmarks[i][j].x*p.width < 825 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 750*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingG = true;
                   FingerG = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(812.5*scaler2,500*scaler2)));
                 }
-                if(FingerG == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
+                if(FingerG == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 825 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 750*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedG = false;
                   console.log("played");
                 }
                 if(playedLowF == false &&detections.multiHandLandmarks[i][j].x*p.width < 1000 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 825*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2){
                   playingLowF = true;
                   FingerLowF = i*20+j;
+                  blobs.push(new Blob(10,p.createVector(937.5*scaler2,500*scaler2)));
                 }
-                if(FingerLowF == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 125 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 0*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
+                if(FingerLowF == i*20+j&&!(detections.multiHandLandmarks[i][j].x*p.width < 1000 *scaler2 && detections.multiHandLandmarks[i][j].x*p.width > 825*scaler2&&detections.multiHandLandmarks[i][j].y*p.height < 800 *scaler2 && detections.multiHandLandmarks[i][j].y*p.height > 500*scaler2)){
                   playedLowF = false;
                   console.log("played");
                 }
@@ -164,6 +189,10 @@ let sketch = function(p){
           p.drawLines([13, 14, 15, 16]);//ring finger
           p.drawLines([17, 18, 19, 20]);//pinky
       }
+    }
+    for(let i = 0;i < blobs.length; i++){
+      blobs[i].display();
+      blobs[i].move();
     }
     if(playingHighF == true){
       HighF.play();
