@@ -10,7 +10,7 @@
 // https://wiki.seeedstudio.com/Grove-Touch_Sensor/
 
 // These constants won't change. They're used to give names to the pins used:
-const int analogInPin = 0; // or A0  // digital input pin that the sensor is attached to
+const int analogInPin = 1; // or A0  // digital input pin that the sensor is attached to
 const int digitalInPin = 2; // or A0  // digital input pin that the sensor is attached to
 
 int potiValue = 0;        // value from potentiometer

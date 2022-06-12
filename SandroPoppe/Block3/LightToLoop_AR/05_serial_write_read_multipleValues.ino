@@ -20,10 +20,11 @@ const int servoPin = 6; // digital pin that servor motor is attahced to
 const int analogInPin = 0; // or A0  // digital input pin that the sensor is attached to
 const int digitalInPin = 2; // or A0  // digital input pin that the sensor is attached to
 const int analogPin = 1;
-
+String instrumentNameValue;
 int servoValue = 0;           // value used to drive servo motor
 int ledValue = 0;           // pwm value used to drive actuator
-
+String r1 = "r1";
+String r2 = "r2";
 int potiValue = 0;        // value from potentiometer
 int switchValue = 0;
 int drehding = 0;// value from switch
@@ -38,11 +39,14 @@ void setup() {
   // init funken
   lcd.begin(16, 2);
   fnk.begin(57600, 0, 0); // higher baudrate for better performance
-  fnk.listenTo("WHATEVER", whatever); // however you want to name your callback
+  fnk.listenTo("RowOne", rowOne); // however you want to name your callback
+  fnk.listenTo("RowTwo", rowTwo); // however you want to name your callback
 
   // define input pins
   pinMode(digitalInPin, INPUT);
-
+  lcd.begin(16, 2);
+  // set RGB backlight
+  lcd.setRGB(255, 255, 255);
   // for analog input + output pin no initialization as an input needed !
 
   // attaches the servo on servo pin to the servo object
@@ -78,33 +82,43 @@ void loop() {
     // print switch value
     Serial.print(switchValue);
     Serial.print(" ");
+    
     // print switch value
-    Serial.println(drehding);
+    Serial.print(drehding);
+    Serial.print(" ");
+    
+    // print switch value
+    Serial.println(r1);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(r1);
+    lcd.setCursor(0, 1);
+    lcd.print(r2);
+    
     // update timestamp last sent
     lastSent = millis();
   }
-  lcd.setRGB(22, 22, 22);
-  
 
 }
 
-void whatever(char *c) {
+void rowOne(char *c) {
 
   // get first argument
   char *token = fnk.getToken(c); // is needed for library to work properly, but can be ignored
 
-  // read servo value from serial port
-  int servoValue = atoi(fnk.getArgument(c));
+   r1 = fnk.getRemaining();
+  
 
-  // read led value from serial port
-  int ledValue = atoi(fnk.getArgument(c));
 
-  // tell servo to go to position
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print(servoValue);
+}
+void rowTwo(char *c) {
 
-  // control led
-  analogWrite(ledPin, ledValue);
+  // get first argument
+  char *token = fnk.getToken(c); // is needed for library to work properly, but can be ignored
+   r2 = fnk.getRemaining();
+  
+ 
+  
+
 
 }

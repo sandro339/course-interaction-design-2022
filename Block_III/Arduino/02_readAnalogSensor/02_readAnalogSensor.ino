@@ -5,7 +5,7 @@
 // https://wiki.seeedstudio.com/Grove-Sound_Sensor/ > look at code example
 
 // These constants won't change. They're used to give names to the pins used:
-const int analogInPin = 0; // or A0  // digital input pin that the sensor is attached to
+const int analogInPin = 1; // or A0  // digital input pin that the sensor is attached to
 
 int sensorValue = 0;        // value read from sensor
 
