@@ -16,7 +16,7 @@ let stopthebang2 = true;
 
 let sketch = function(p){
   p.preload = function(){
-    customFont = p.loadFont('data/IBM_Plex_Mono/IBMPlexMono-Regular.ttf');
+   
     bang_2 = p.loadSound('data/drum-kit-old-school-snare_E_major.wav')
     bang = p.loadSound('data/percussion-snare-slap_5bpm_D_major.wav');
     console.log(customFont);
@@ -27,7 +27,7 @@ let sketch = function(p){
     console.log(p.textFont());
     canvas = p.createCanvas(w, h, p.WEBGL);
     canvas.id('canvas');
-    p.textFont(customFont);
+    
     p.stroke(0);
     p.strokeWeight(20);
 
@@ -90,6 +90,10 @@ let sketch = function(p){
     }
     
     scaler2 = p.windowWidth/1000;
+
+    if(p.windowWidth > 1000){
+      scaler2 = 1;
+    }
     p.fill(255,0,0);
     
     
@@ -114,12 +118,13 @@ let sketch = function(p){
     }
 
     scaler = p.windowWidth/w;
-    
+    console.log(p.windowWidth);
     if(p.windowWidth <= 1000){
       w *= scaler;
       h *= scaler;
       p.resizeCanvas(w-10,h-10);
       smaller = true;
+      console.log("smaller");
       document.getElementById('canvas').style.marginLeft = -w/2+5 + "px";
     }
     if(p.windowWidth > 1000){
