@@ -19,6 +19,7 @@ const int ledPin = 5; // digital pin that LED is attahced to
 const int servoPin = 6; // digital pin that servor motor is attahced to
 const int analogInPin = 0; // or A0  // digital input pin that the sensor is attached to
 const int digitalInPin = 2; // or A0  // digital input pin that the sensor is attached to
+const int touchPin = 3;
 const int analogPin = 1;
 String instrumentNameValue;
 int servoValue = 0;           // value used to drive servo motor
@@ -28,6 +29,7 @@ String r2 = "r2";
 int potiValue = 0;        // value from potentiometer
 int switchValue = 0;
 int drehding = 0;// value from switch
+int touchValue = 0;
 
 unsigned long lastSent = 0;
 int updateSerial = 10; // interval to send value via serial port
@@ -68,6 +70,8 @@ void loop() {
 
   drehding = analogRead(analogPin);
 
+  touchValue = digitalRead(touchPin);
+
 
   // Do not try to send Serial stuff too often, be prevent this by checking when we sent the last time
   if ((millis() - lastSent) > updateSerial) {
@@ -85,6 +89,8 @@ void loop() {
     
     // print switch value
     Serial.print(drehding);
+    Serial.print(" ");
+    Serial.print(touchValue);
     Serial.print(" ");
     
     // print switch value

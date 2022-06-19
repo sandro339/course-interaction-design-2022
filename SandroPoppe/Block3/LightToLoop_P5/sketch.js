@@ -8,7 +8,7 @@
 let connectButton;
 let serialController;
 let receivedValues = [];
-let HighF,LowF,G,A,B,C,D,E,Kick,Snare;
+let HighF,LowF,G,A,B,C,D,E,Kick,Snare,Metro,MetroUp;
 let looptime;
 let time = 0;
 var loopedObjects = [];
@@ -17,8 +17,13 @@ let soundPlayed = false;
 let instrument = 0;
 let library = [];
 let pressed = false;
-let loops = 4;
 let mapped;
+let started = false;
+let tempTime = 0;
+let looper = false;
+let playMetro = false;
+let metroDelay = 20;
+let metroBeat = 0;
 
 class LoopedSound{
   constructor(sound, time){
@@ -38,11 +43,13 @@ function preload(){
     Snare = new Sounds(new Array(loadSound('Data/drumhit_snare3.wav')),"Snare");
     Hihat = new Sounds(new Array(loadSound('Data/drumhit_Hat11.wav')),"Hihat");
     Piano = new Sounds(new Array(loadSound('Data/piano-a_A_major.wav'),loadSound('Data/piano-b_B_major.wav'),loadSound('Data/piano-c_C_major.wav'),loadSound('Data/piano-d_D_major.wav'),loadSound('Data/piano-e_E_major.wav')),"Piano");
+    Metro = new Sounds(new Array(loadSound('Data/Metronome.wav')),"Metro");
+    MetroUp = new Sounds(new Array(loadSound('Data/MetronomeUp.wav')),"MetroUP");
    
 }
 
 function setup() {
-  looptime = 60 * loops
+  looptime = 60 * 4
   cuttentSound = Kick;
   library.push(Kick);
   library.push(Snare);
@@ -62,18 +69,25 @@ function setup() {
 }
 
 function draw() {
-
-  // background
   background(0);
+  if(!started){
+    for(let i = 0; i < loopedObjects.length;i++){
+    if(loopedObjects[i].time == time){
+      loopedObjects[i].sound.play();
+    }
+  }
+  }
+  
+  if(started){
   time++;
   if(time >= looptime) time = 0;
-  looptime = 60 * loops
   for(let i = 0; i < loopedObjects.length;i++){
     if(loopedObjects[i].time == time){
       loopedObjects[i].sound.play();
     }
   }
-  let help = "Help";
+  
+
  
  
 
@@ -98,7 +112,7 @@ function draw() {
     // show values
     fill(255);
     print(receivedValues[3]);
-    text("potentiometer: " + receivedValues[2] + "    switch: " + receivedValues[1], 32, height / 2 + 32);
+    text("potentiometer: " + receivedValues[3] + "    switch: " + receivedValues[1], 32, height / 2 + 32);
     if(receivedValues[0]>500 && soundPlayed == false){
       soundPlayed = true;
       currentSound.play();
@@ -132,8 +146,44 @@ function draw() {
      if(receivedValues[1] == 0){
        pressed = false;
      }
+     if(receivedValues[3] == 1) {
+      started = false;
+      tempTime = 0;
+      loopedObjects = [];
+      time = 0;
+      metroBeat = 0;
+     }
 
   }
+  }else{
+    if (serialController.read() && serialController.hasData()) {
+      // split string into array
+      receivedValues = split(serialController.read(), " ");
+      if(receivedValues[3] == 1){
+        tempTime++;
+        looper = true;
+        playMetro = true;
+        time++;
+        metroDelay--;
+        if(metroDelay <= 0){
+          if(metroBeat %4 == 0){
+            loopedObjects.push(new LoopedSound(MetroUp.sound[0],time));
+          }else{
+             loopedObjects.push(new LoopedSound(Metro.sound[0],time));
+          }
+          metroBeat++;
+          metroDelay = 40;
+        }
+      }else if(looper == true){
+        looptime = tempTime;
+        tempTime = 0;
+        started = true;
+      }
+    }
+  }
+  // background
+  
+ 
 
 }
 
