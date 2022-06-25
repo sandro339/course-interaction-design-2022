@@ -73,7 +73,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(255);
   if(!started){
     for(let i = 0; i < loopedObjects.length;i++){
     if(loopedObjects[i].time == time){
